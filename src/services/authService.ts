@@ -1,4 +1,4 @@
-export const login = async (email: string, password: string) => {
+const login = async (email: string, password: string) => {
     // Example API request for login
     const response = await fetch('/api/login', {
       method: 'POST',
@@ -12,3 +12,4 @@ export const login = async (email: string, password: string) => {
   
     return response.json();
   };  
+  export default login;

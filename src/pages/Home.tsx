@@ -1,12 +1,11 @@
 import React from 'react';
-import LoginForm from '../components/LoginButton';
+import LoginButton from '../components/LoginButton';
 
-const Home: React.FC = () => {
-  return (
+const Home: React.FC = () => (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <LoginForm />
+      <LoginButton />
     </div>
   );
-};
 
 export default Home;
+

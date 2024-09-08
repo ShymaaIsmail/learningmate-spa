@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 interface UserProfile {
   email: string;
@@ -9,11 +11,12 @@ interface UserProfile {
 }
 
 const LoginButton: React.FC = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   const onSignInSuccess = (response: any) => {
-    const credential = response.credential;
+    const {credential} = response;
     if (credential) {
       // Decode the token to get user information
       const decodedToken: UserProfile = jwtDecode<UserProfile>(credential);
@@ -22,6 +25,7 @@ const LoginButton: React.FC = () => {
       // Set the user profile information
       setIsLoggedIn(true);
       setUserProfile(decodedToken);
+      navigate('dashboard');
     } else {
       console.log('No credential found');
     }
@@ -47,7 +51,7 @@ const LoginButton: React.FC = () => {
           size="large"
         />
       ) : (
-        <button
+        <button type="submit"
           style={{ width: 200, height: 40, textAlign: 'center' }}
           onClick={logout}
         >
