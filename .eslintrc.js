@@ -42,6 +42,7 @@ module.exports = {
       }
     ],
     'global-require': 'off', // Disable the global-require rule
+    "@typescript-eslint/no-explicit-any": "off",
   },
   settings: {
     'import/resolver': {

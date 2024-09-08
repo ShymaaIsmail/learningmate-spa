@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@hookform/resolvers": "^3.9.0",
+    "autoprefixer": "^9.8.8",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -11,25 +13,22 @@
     "@types/jest": "^27.5.2",
     "@types/jwt-decode": "^3.1.0",
     "@types/node": "^16.18.108",
-    "autoprefixer": "^10.4.20",
     "eslint-config-react-app": "^6.0.0",
     "jwt-decode": "^4.0.0",
-    "postcss": "^8.4.45",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
     "react-router-dom": "^6.26.1",
-    "react-scripts": "^4.0.3",
-    "tailwindcss": "^3.4.10",
+    "react-scripts": "^5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": [
@@ -66,6 +65,8 @@
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-react": "^7.35.2",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "postcss": "^7.0.39",
+    "postcss-cli": "^11.0.0",
     "prettier": "^3.3.3",
     "stylelint": "^16.9.0",
     "stylelint-config-tailwindcss": "0.0.7"
