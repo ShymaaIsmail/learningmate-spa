@@ -41,6 +41,7 @@ module.exports = {
         "unnamedComponents": "arrow-function" 
       }
     ],
+    'global-require': 'off', // Disable the global-require rule
   },
   settings: {
     'import/resolver': {
