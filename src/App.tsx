@@ -17,7 +17,6 @@ const App: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <Router>
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-grow p-4">
@@ -28,7 +27,6 @@ const App: React.FC = () => {
           </main>
           <Footer />
         </div>
-      </Router>
     </GoogleOAuthProvider>
   );
 };
