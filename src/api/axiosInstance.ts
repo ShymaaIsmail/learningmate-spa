@@ -2,8 +2,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://api.example.com', // Replace with your API base URL
-  timeout: 10000, // Optional: request timeout (10 seconds)
+  baseURL: process.env.LEARNING_API_URL, 
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => 
     // Modify request config if needed (e.g., add auth tokens)
-     config
+    config
   ,
   (error) => Promise.reject(error)
 );
@@ -22,8 +22,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => 
     // Handle errors globally (e.g., log errors, show notifications)
-     Promise.reject(error)
-  
+    Promise.reject(error)
 );
 
 export default axiosInstance;

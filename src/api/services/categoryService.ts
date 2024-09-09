@@ -1,13 +1,22 @@
-// src/api/services/categoryService.ts
-import axiosInstance from '../axiosInstance';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import useFetch from '../../hooks/useFetch';
+import { LearningCategory } from '../../types/learningTypes';
 
 /**
- * Fetches categories from the backend API.
- * @returns A promise that resolves to the list of categories.
+ * Custom hook for fetching categories using useFetch.
+ * @returns An object containing categories data, loading state, and error information.
  */
-const getCategories = async () => {
-  const response = await axiosInstance.get('/categories');
-  return response.data;
-};
+const getCategories = () => {
+  const { data, isLoading, error, fetchData } = useFetch<LearningCategory[]>({
+    url: '/categories',
+    method: 'GET',
+  });
 
-export default { getCategories };
+  return {
+    categories: data,
+    isLoading,
+    error,
+    fetchData,
+  };
+};
+export default getCategories;

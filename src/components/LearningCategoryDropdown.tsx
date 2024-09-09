@@ -1,35 +1,22 @@
-// LearningCategoryDropdown.tsx
-import React, { useEffect, useState, useMemo } from 'react';
-import axiosInstance from '../api/axiosInstance';
+// src/components/LearningCategoryDropdown.tsx
+import React, { useState, useMemo } from 'react';
 import { LearningCategory } from '../types/learningTypes';
-
+import getCategories from '../api/services/categoryService';
 
 interface LearningCategoryDropdownProps {
   onSelect: (category: LearningCategory) => void;
 }
 
 const LearningCategoryDropdown: React.FC<LearningCategoryDropdownProps> = ({ onSelect }) => {
-  const [categories, setCategories] = useState<LearningCategory[]>([]);
+  const { categories, isLoading, error, fetchData } = getCategories();
+
   const [selectedCategory, setSelectedCategory] = useState<LearningCategory | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  // Fetch categories from the backend API
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axiosInstance.get('/categories'); // Adjust the endpoint accordingly
-        setCategories(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError((err as Error).message);
-        setIsLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  // Fetch categories when the component mounts or when needed
+  React.useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
@@ -42,7 +29,7 @@ const LearningCategoryDropdown: React.FC<LearningCategoryDropdownProps> = ({ onS
   };
 
   // Memoize the categories to avoid unnecessary re-renders
-  const memoizedCategories = useMemo(() => categories, [categories]);
+  const memoizedCategories = useMemo(() => categories ?? [], [categories]);
 
   // Render loading, error, or categories
   const renderDropdownContent = () => {
