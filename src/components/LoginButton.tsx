@@ -1,44 +1,32 @@
 /* eslint-disable no-console */
-import React, { useState } from 'react';
+// LoginButton.tsx
+import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-
-interface UserProfile {
-  email: string;
-  name: string;
-  picture: string;
-}
+import { useAuth } from '../context/AuthContext';
 
 const LoginButton: React.FC = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const { isLoggedIn, login, logout } = useAuth(); // Get login and logout functions from the context
 
   const onSignInSuccess = (response: any) => {
-    const {credential} = response;
+    const { credential } = response;
     if (credential) {
       // Decode the token to get user information
-      const decodedToken: UserProfile = jwtDecode<UserProfile>(credential);
+      const decodedToken = jwtDecode(credential);
       console.log('Decoded Token:', decodedToken);
 
-      // Set the user profile information
-      setIsLoggedIn(true);
-      setUserProfile(decodedToken);
-      navigate('dashboard');
+      // Set the user profile information using the login function from context
+      login(decodedToken as any); // Update the context state
+      navigate('dashboard'); // Navigate to dashboard upon successful login
     } else {
       console.log('No credential found');
     }
   };
 
   const onSignInError = () => {
-    console.log('Google Sign-In was unsuccessful.');
-  };
-
-  const logout = () => {
-    setIsLoggedIn(false);
-    setUserProfile(null);
-    console.log('Logged out successfully');
+    console.error('Google Sign-In was unsuccessful.');
   };
 
   return (
@@ -51,7 +39,8 @@ const LoginButton: React.FC = () => {
           size="large"
         />
       ) : (
-        <button type="submit"
+        <button
+          type="button"
           style={{ width: 200, height: 40, textAlign: 'center' }}
           onClick={logout}
         >
