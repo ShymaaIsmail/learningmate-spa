@@ -8,7 +8,7 @@ const Header: React.FC = () => (
         <nav>
           <ul className="flex space-x-4">
             <li>
-              <a href="#home" className="hover:underline">Home</a>
+              <a href="#dashboard" className="hover:underline">Dashboard</a>
             </li>
           </ul>
         </nav>
