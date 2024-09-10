@@ -8,7 +8,7 @@ import { LearningCategory } from '../../types/learningTypes';
  */
 const getCategories = () => {
   const { data, isLoading, error, fetchData } = useFetch<LearningCategory[]>({
-    url: '/categories',
+    url: '/learning_categories',
     method: 'GET',
   });
 
