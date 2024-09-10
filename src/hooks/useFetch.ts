@@ -25,8 +25,9 @@ const useFetch = <T>(options: FetchOptions): UseFetchReturn<T> => {
     error: null,
   });
 
+  // Memoize the fetchData function to avoid it being recreated on every render
   const fetchData = useCallback(async () => {
-    setState({ ...state, isLoading: true, error: null });
+    setState((prevState) => ({ ...prevState, isLoading: true, error: null }));
 
     try {
       const response = await axiosInstance({
@@ -39,11 +40,11 @@ const useFetch = <T>(options: FetchOptions): UseFetchReturn<T> => {
     } catch (err) {
       setState({ data: null, isLoading: false, error: (err as Error).message });
     }
-  }, [options, state]);
+  }, [options.url, options.method, options.body]); // Use specific dependencies
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData]); // fetchData is memoized, so it won't cause infinite loop
 
   return { ...state, fetchData };
 };
