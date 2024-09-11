@@ -2,8 +2,9 @@
 // AuthContext.tsx
 import React, { createContext, useContext, useState, useMemo, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import { AuthContextType, UserProfile } from '../types/authTypes';
-
+import getLoginToken from '../api/services/authService';
 
 
 // Create a context with default values
@@ -13,10 +14,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [googleToken, setGoogleToken] = useState<string>('');
+  const { loginToken, isLoading, error, fetchData } = getLoginToken(googleToken);
 
-  const login = (profile: UserProfile) => {
-    setIsLoggedIn(true);
-    setUserProfile(profile);
+  const login = (googleTokenData: string) => {
+    // Decode the token to get user information
+    const profile: UserProfile = jwtDecode(googleTokenData);
+    console.log('Decoded Token:', profile);
+    console.log('Google Token:', googleTokenData);
+    setGoogleToken(googleTokenData);
+    fetchData(googleTokenData);
+    if(loginToken)
+    { 
+      setIsLoggedIn(true);
+      profile.loginToken = loginToken;
+      setUserProfile(profile);
+    }
   };
 
   const logout = () => {

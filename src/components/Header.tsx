@@ -10,6 +10,7 @@ const Header: React.FC = () => {
     <header className="bg-blue-600 text-white py-4">
       <div className="container mx-auto flex justify-between items-center px-4">
         <h1 className="text-3xl font-bold">Learning mate</h1>
+        <h2 className="text-1xl font-bold"> Hello {userProfile?.name}</h2>
         <nav>
         {isLoggedIn ?(
           <ul className="flex space-x-4">

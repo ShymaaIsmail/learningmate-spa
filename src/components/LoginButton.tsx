@@ -2,7 +2,6 @@
 // LoginButton.tsx
 import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,12 +12,8 @@ const LoginButton: React.FC = () => {
   const onSignInSuccess = (response: any) => {
     const { credential } = response;
     if (credential) {
-      // Decode the token to get user information
-      const decodedToken = jwtDecode(credential);
-      console.log('Decoded Token:', decodedToken);
-
       // Set the user profile information using the login function from context
-      login(decodedToken as any); // Update the context state
+      login(credential); // Update the context state
       navigate('dashboard'); // Navigate to dashboard upon successful login
     } else {
       console.log('No credential found');

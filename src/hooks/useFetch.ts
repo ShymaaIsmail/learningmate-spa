@@ -15,10 +15,29 @@ interface FetchState<T> {
 }
 
 interface UseFetchReturn<T> extends FetchState<T> {
-  fetchData: () => void;
+  fetchData: (body?: any) => void;
 }
 
-const useFetch = <T>(options: FetchOptions): UseFetchReturn<T> => {
+
+export class FetchReturn<T> implements UseFetchReturn<T> {
+  isLoading: boolean;
+
+  fetchData: (body?: any) => void;
+
+  constructor() {
+    this.isLoading = false;
+    this.fetchData = (body?: any) => {
+      // Empty implementation
+    };
+  }
+
+  data!: T | null;
+  
+  error!: string | null;
+}
+
+
+const useFetch = <T>(options: FetchOptions | null): UseFetchReturn<T> => {
   const [state, setState] = useState<FetchState<T>>({
     data: null,
     isLoading: true,
@@ -30,17 +49,19 @@ const useFetch = <T>(options: FetchOptions): UseFetchReturn<T> => {
     setState((prevState) => ({ ...prevState, isLoading: true, error: null }));
 
     try {
-      const response = await axiosInstance({
-        url: options.url,
-        method: options.method,
-        data: options.body,
-      });
-
-      setState({ data: response.data, isLoading: false, error: null });
+      if (options){
+        console.log(options?.body)
+        const response = await axiosInstance({
+          url: options?.url,
+          method: options?.method,
+          data: options?.body,
+        });
+        setState({ data: response.data, isLoading: false, error: null });
+      }
     } catch (err) {
       setState({ data: null, isLoading: false, error: (err as Error).message });
     }
-  }, [options.url, options.method, options.body]); // Use specific dependencies
+  }, [options?.url, options?.method, options?.body]); // Use specific dependencies
 
   useEffect(() => {
     fetchData();
