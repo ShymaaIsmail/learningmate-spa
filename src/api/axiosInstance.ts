@@ -5,6 +5,7 @@ const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_LEARNING_API_URL, 
   headers: {
     'Content-Type': 'application/json',
+    'accept': 'application/json',
   },
 });
 
