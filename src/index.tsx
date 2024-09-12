@@ -1,20 +1,39 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client'; // Import from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'; 
-import './index.css'; // Import Tailwind CSS
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import './index.css';
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { setupAxiosInterceptors } from './api/axiosInstance';
 
-const rootElement = document.getElementById('root'); // Get the root DOM element
+// Define the props type for AxiosInterceptorSetup component
+interface AxiosInterceptorSetupProps {
+  children: React.ReactNode;
+}
+
+const AxiosInterceptorSetup: React.FC<AxiosInterceptorSetupProps> = ({ children }) => {
+  const { userProfile } = useAuth(); 
+
+  React.useEffect(() => {
+    const getToken = () => userProfile?.loginToken || ''; 
+    setupAxiosInterceptors(getToken); 
+  }, [userProfile]); 
+
+  return <><div/>{children}</>;
+};
+
+const rootElement = document.getElementById('root');
 
 if (rootElement) {
-  const root = ReactDOM.createRoot(rootElement); // Use createRoot instead of ReactDOM.render
+  const root = ReactDOM.createRoot(rootElement);
   root.render(
     <React.StrictMode>
       <BrowserRouter>
-      <AuthProvider>
-      <App />
-      </AuthProvider>
+        <AuthProvider>
+          <AxiosInterceptorSetup> {/* Wrap the App with Axios Interceptor Setup */}
+            <App />
+          </AxiosInterceptorSetup>
+        </AuthProvider>
       </BrowserRouter>
     </React.StrictMode>
   );
