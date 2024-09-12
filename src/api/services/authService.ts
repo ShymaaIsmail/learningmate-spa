@@ -1,40 +1,48 @@
 import { useEffect, useState } from 'react';
-import useFetch from '../../hooks/useFetch';
 
 const useGetLoginToken = (googleToken: string) => {
-  const [fetchOptions, setFetchOptions] = useState<{
-    url: string;
-    method: 'POST';
-    body: string;
-  } | null>(null);
+  const [loginToken, setLoginToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Create fetchOptions only when googleToken is not empty
   useEffect(() => {
-    if (googleToken.length > 0) {
-      setFetchOptions({
-        url: '/auth/login/',
-        method: 'POST' as const,
-        body: JSON.stringify({ token: googleToken }),
-      });
-    } else {
-      setFetchOptions(null);
-    }
+    const fetchLoginToken = async () => {
+      if (googleToken.length === 0) {
+        // No token provided; do nothing
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(`${process.env.REACT_APP_LEARNING_API_URL}auth/login/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ google_token: googleToken }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setLoginToken(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLoginToken();
   }, [googleToken]);
 
-  const { data, isLoading, error, fetchData } = useFetch<string>(fetchOptions);
-
-  // Call fetchData only when fetchOptions is set
-  useEffect(() => {
-    if (fetchOptions) {
-      fetchData();
-    }
-  }, [fetchOptions, fetchData]);
-
   return {
-    loginToken: data,
+    loginToken,
     isLoading,
     error,
-    fetchData,
   };
 };
 

@@ -1,11 +1,8 @@
-/* eslint-disable no-console */
-// AuthContext.tsx
-import React, { createContext, useContext, useState, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 import { AuthContextType, UserProfile } from '../types/authTypes';
-import getLoginToken from '../api/services/authService';
-
 
 // Create a context with default values
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,22 +12,47 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [googleToken, setGoogleToken] = useState<string>('');
-  const { loginToken, isLoading, error, fetchData } = getLoginToken(googleToken);
+  const [loginToken, setLoginToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchLoginToken = async () => {
+      if (googleToken.length === 0) return;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_LEARNING_API_URL}auth/login/`, { google_token: googleToken });
+        setLoginToken(response.data.token); // Adjust according to your API response structure
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLoginToken();
+  }, [googleToken]);
 
   const login = (googleTokenData: string) => {
-    // Decode the token to get user information
-    const profile: UserProfile = jwtDecode(googleTokenData);
-    console.log('Decoded Token:', profile);
-    console.log('Google Token:', googleTokenData);
     setGoogleToken(googleTokenData);
-    fetchData(googleTokenData);
-    if(loginToken)
-    { 
-      setIsLoggedIn(true);
-      profile.loginToken = loginToken;
-      setUserProfile(profile);
-    }
   };
+
+  useEffect(() => {
+    if (loginToken) {
+      try {
+        const profile: UserProfile = jwtDecode(googleToken);
+        setIsLoggedIn(true);
+        profile.loginToken = loginToken;
+        setUserProfile(profile);
+      } catch (err) {
+        console.error('Login error:', err);
+        setError('Failed to decode token');
+      }
+    }
+  }, [loginToken]);
 
   const logout = () => {
     setIsLoggedIn(false);
@@ -38,19 +60,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     navigate('/');
   };
 
-  // Memoize the context value to prevent unnecessary re-renders
-  const authContextValue = useMemo(() => ({
-    isLoggedIn,
-    userProfile,
-    login,
-    logout,
-  }), [isLoggedIn, userProfile]);
-
-  return (
-    <AuthContext.Provider value={authContextValue}>
-      {children}
-    </AuthContext.Provider>
+  const authContextValue = useMemo(
+    () => ({
+      isLoggedIn,
+      userProfile,
+      login,
+      logout,
+    }),
+    [isLoggedIn, userProfile]
   );
+
+  return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {

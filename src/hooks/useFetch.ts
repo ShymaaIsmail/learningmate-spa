@@ -50,13 +50,16 @@ const useFetch = <T>(options: FetchOptions | null): UseFetchReturn<T> => {
 
     try {
       if (options){
-        console.log(options?.body)
         const response = await axiosInstance({
           url: options?.url,
           method: options?.method,
           data: options?.body,
         });
+        alert(`response.data ${response.data}`)
         setState({ data: response.data, isLoading: false, error: null });
+      }
+      else{
+        setState({ data: null, isLoading: false, error: null });
       }
     } catch (err) {
       setState({ data: null, isLoading: false, error: (err as Error).message });
