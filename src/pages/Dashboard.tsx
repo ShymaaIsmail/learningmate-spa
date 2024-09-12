@@ -1,26 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LearningCategoryDropdown from '../components/LearningCategoryDropdown';
+import { LearningCategory, Course } from '../types/learningTypes';
 import LearningCourses from '../components/LearningCourses';
-import { LearningCategory } from '../types/learningTypes';
+import getCourses from '../api/services/coursesService';
 
 
 const Dashboard: React.FC = () => {
-  const handleSelect = (option: LearningCategory) => {
-    // eslint-disable-next-line no-alert
-    alert(`Selected option: ${option}`);
+  const [coursesList, setCourses] = useState<Course[]>([])
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setError] = useState<string | null>(null);
+
+  const handleSelect = async (option: LearningCategory) => {
+    alert(`Selected option: ${option.name}`); // eslint-disable-line no-alert
+
+    // Call getCourses to fetch courses
+    const { courses, isLoading, error, fetchData } = getCourses(option.name);
+
+    setLoading(isLoading);
+    setError(error);
+
+    if (fetchData) {
+      await fetchData();
+      setCourses(courses || []);
+    }
   };
 
-    return (
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-    <div className="p-4">
-    <h1>Learning Category</h1>
-      <LearningCategoryDropdown 
-        onSelect={handleSelect} 
-      />
+      <div className="p-4">
+        <h1>Learning Category</h1>
+        <LearningCategoryDropdown onSelect={handleSelect} />
+      </div>
+      <LearningCourses courses={coursesList} loading={loading} error={errorMessage} />
     </div>
-    <LearningCourses />
-
-    </div>
-    )};
+  );
+};
 
 export default Dashboard;
