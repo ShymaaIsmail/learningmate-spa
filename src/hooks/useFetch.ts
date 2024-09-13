@@ -55,7 +55,6 @@ const useFetch = <T>(options: FetchOptions | null): UseFetchReturn<T> => {
           method: options?.method,
           data: options?.body,
         });
-        alert(`response.data ${response.data}`)
         setState({ data: response.data, isLoading: false, error: null });
       }
       else{
