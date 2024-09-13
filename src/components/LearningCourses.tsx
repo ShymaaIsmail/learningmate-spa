@@ -21,22 +21,32 @@ const LearningCourses: React.FC<LearningCoursesProps> = ({ courses, loading, err
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 p-4">
       {courses.map((course) => (
         <div
           key={course.id}
-          className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200"
+          className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200"
         >
-          <h2 className="text-xl font-semibold mb-2">{course.title}</h2>
-          <p className="text-gray-700 mb-4">{course.headline}</p>
-          <a
-            href={course.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-indigo-500 hover:text-indigo-700"
-          >
-            View Course
-          </a>
+          {/* Course Image */}
+          <img
+            src={course.image_480x270}
+            alt={course.title}
+            className="w-full h-48 object-cover"
+          />
+
+          {/* Course Information */}
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-2">{course.title}</h2>
+            <p className="text-gray-700 mb-4">{course.headline}</p>
+            <a
+              href={course.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-500 hover:text-indigo-700"
+            >
+              View Course
+            </a>
+          </div>
         </div>
       ))}
     </div>
