@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Header: React.FC = () => {
@@ -7,10 +8,8 @@ const Header: React.FC = () => {
   return (
     <header className="bg-blue-600 text-white py-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
-        {/* Logo / Title */}
         <h1 className="text-2xl md:text-3xl font-bold">Learning Mate</h1>
 
-        {/* User Greeting and Navigation */}
         <div className="flex items-center space-x-6">
           {isLoggedIn && (
             <div className="text-lg md:text-xl font-medium">
@@ -22,10 +21,10 @@ const Header: React.FC = () => {
             <nav>
               <ul className="flex space-x-6">
                 <li>
-                  <a href="#dashboard" className="hover:text-yellow-300 transition-colors duration-200">Dashboard</a>
+                  <Link to="/dashboard" className="hover:text-yellow-300 transition-colors duration-200">Dashboard</Link>
                 </li>
                 <li>
-                  <a href="#learning-plans" className="hover:text-yellow-300 transition-colors duration-200">Learning Plans</a>
+                  <Link to="/learning-plans" className="hover:text-yellow-300 transition-colors duration-200">Learning Plans</Link>
                 </li>
                 <li>
                   <button
