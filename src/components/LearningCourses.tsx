@@ -38,6 +38,7 @@ const LearningCourses: React.FC<LearningCoursesProps> = ({ courses, loading, err
           <div className="p-4">
             <h2 className="text-lg font-semibold mb-2">{course.title}</h2>
             <p className="text-gray-700 mb-4">{course.headline}</p>
+            <p className="text-sm text-gray-500 mb-4">Source: {course.source}</p>
             <a
               href={course.url}
               target="_blank"
