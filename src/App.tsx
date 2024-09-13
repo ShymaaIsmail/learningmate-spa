@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
+import LearningPlans from './pages/LearningPlans';
 
 const App: React.FC = () => {
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -23,6 +24,7 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/learning-plans" element={<LearningPlans />} />
             </Routes>
           </main>
           <Footer />
