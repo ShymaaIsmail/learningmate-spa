@@ -1,28 +1,19 @@
-// services/plansService.ts
-import { number } from 'yup';
 import useFetch from '../../hooks/useFetch';
 import { PaginatedLearningPlan } from '../../types/learningTypes';
 
-const getPlans = (page: number) => {
-  const shouldFetch = !!number;
-  const noOp = () => undefined;
+const getPlans = async (page: number) => {
+  const { data, isLoading, error, fetchData } = useFetch<PaginatedLearningPlan>({
+    url: `/learning_plans`,
+    method: 'GET',
+  });
 
-  // Utilize the custom useFetch hook to fetch plans
-  const { data, isLoading, error, fetchData } = useFetch<PaginatedLearningPlan>(
-    shouldFetch ? {
-      url: `/plans`,
-      method: 'GET',
-    } : null
-  );
 
-  // Ensure consistent type for paginatedPlans
-  const paginatedPlans: PaginatedLearningPlan | null = data || null;
-
+  // Return results
   return {
-    paginatedPlans,
-    loading: shouldFetch && isLoading,
-    error: shouldFetch ? error : null,
-    fetchPlans: shouldFetch ? fetchData : () => noOp(),
+    paginatedPlans: data || null,
+    loading: isLoading,
+    error: error || null,
+    fetchData
   };
 };
 
