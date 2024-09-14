@@ -1,9 +1,9 @@
 import useFetch from '../../hooks/useFetch';
 import { PaginatedLearningPlan } from '../../types/learningTypes';
 
-const getPlans = async (page: number) => {
+const getPlans = (page: number) => {
   const { data, isLoading, error, fetchData } = useFetch<PaginatedLearningPlan>({
-    url: `/learning_plans`,
+    url: `/learning_plans?page=${page}`,
     method: 'GET',
   });
 

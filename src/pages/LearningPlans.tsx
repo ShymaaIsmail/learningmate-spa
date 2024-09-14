@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import LearningPlans from '../components/LearningPlanList';
 import { PaginatedLearningPlan } from '../types/learningTypes';
-import useFetch from '../hooks/useFetch';
+import getPlans from '../api/services/plansService'
 
 const LearningPlansPage: React.FC = () => {
   const [plans, setPlans] = useState<PaginatedLearningPlan | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  // Use useFetch directly within the component
-  const { data, isLoading, error, fetchData } = useFetch<PaginatedLearningPlan>({
-    url: `/learning_plans?page=${currentPage}`,
-    method: 'GET',
-  });
+  const { paginatedPlans,  loading, error, fetchData }  = getPlans(currentPage);
+
 
   // Fetch plans when component mounts or when the page changes
   useEffect(() => {
@@ -21,11 +18,11 @@ const LearningPlansPage: React.FC = () => {
 
   // Update plans and total pages when data changes
   useEffect(() => {
-    if (data) {
-      setPlans(data);
-      setTotalPages(data.totalPages ?? 1);
+    if (paginatedPlans) {
+      setPlans(paginatedPlans);
+      setTotalPages(paginatedPlans.totalPages ?? 1);
     }
-  }, [data]);
+  }, [paginatedPlans]);
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -54,7 +51,7 @@ const LearningPlansPage: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6">Manage Learning Plans</h1>
       <LearningPlans
         paginatedPlans={plans}
-        loading={isLoading}
+        loading={loading}
         error={error ? 'Failed to load learning plans.' : null}
         currentPage={currentPage}
         totalPages={totalPages}
