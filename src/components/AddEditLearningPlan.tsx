@@ -22,8 +22,8 @@ const AddEditLearningPlan: React.FC<AddEditLearningPlanProps> = ({
     if (mode === 'edit' && planId !== null) {
       const fetchPlan = async () => {
         try {
-          const response = await getPlanById(planId); // Make sure getPlanById is not a hook
-          setPlan(response?.plan as LearningPlan);
+          const response = await getPlanById(planId);
+          setPlan(response as LearningPlan);
         } catch (error) {
           console.error('Failed to fetch plan:', error);
         }
@@ -37,7 +37,7 @@ const AddEditLearningPlan: React.FC<AddEditLearningPlanProps> = ({
   
     setPlan((prevPlan) => {
       if (!prevPlan) {
-        return { [name]: value } as unknown as LearningPlan; // Initialize with only the changed field
+        return { [name]: value } as unknown as LearningPlan;
       }
       return {
         ...prevPlan,

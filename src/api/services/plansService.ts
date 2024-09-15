@@ -51,18 +51,14 @@ const deletePlan = async (id: number) => {
   }
 };
 
-const getPlanById = (planId: number) => {
-  const { data, isLoading, error, fetchData } = useFetch<LearningPlan>({
-    url: `${API_BASE_URL}/${planId}`,
-    method: 'GET',
-  });
-
-  return {
-    plan: data || null,
-    loading: isLoading,
-    error: error || null,
-    fetchData,
-  };
+const getPlanById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`${API_BASE_URL}${id}/`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting learning plan:', error);
+    throw new Error('Failed to delete learning plan');
+  }
 };
 export {
   getPlans,
