@@ -2,9 +2,8 @@ export interface UserProfile {
     loginToken: string
     id: string;
     email: string;
-    name: string;
     picture: string;
-
+    name: string;
   }
   
 export interface AuthContextType {

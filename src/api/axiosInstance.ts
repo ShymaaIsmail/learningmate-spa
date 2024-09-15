@@ -10,13 +10,13 @@ const axiosInstance = axios.create({
 });
 
 // Function to set up interceptors
-export const setupAxiosInterceptors = (getToken: any) => {
+export const setupAxiosInterceptors = (token: any) => {
   axiosInstance.interceptors.request.use(
     (config) => {
-      const token = getToken();
-      if (token) {
+      const authToken = localStorage.getItem('token')
+      if (authToken) {
         // eslint-disable-next-line no-param-reassign
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${authToken}`;
       }
       return config;
     },

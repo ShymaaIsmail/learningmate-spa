@@ -12,12 +12,11 @@ interface AxiosInterceptorSetupProps {
 }
 
 const AxiosInterceptorSetup: React.FC<AxiosInterceptorSetupProps> = ({ children }) => {
-  const { userProfile } = useAuth(); 
 
   React.useEffect(() => {
-    const getToken = () => userProfile?.loginToken || ''; 
-    setupAxiosInterceptors(getToken); 
-  }, [userProfile]); 
+    const savedToken = localStorage.getItem('token');
+    setupAxiosInterceptors(savedToken); 
+  }, []); 
 
   return <><div/>{children}</>;
 };

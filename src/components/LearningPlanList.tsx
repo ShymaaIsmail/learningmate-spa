@@ -1,7 +1,19 @@
 import React from 'react';
-import { LearningPlansProps } from '../types/learningTypes';
+import { LearningPlan } from '../types/learningTypes';
 
-const LearningPlans: React.FC<LearningPlansProps> = ({
+interface Props {
+  plans: LearningPlan[] | null;
+  loading: boolean;
+  error: string | null;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  onEdit: (planId: number) => void;
+  onDelete: (planId: number) => void;
+  onAdd: () => void;
+}
+
+const LearningPlans: React.FC<Props> = ({
   plans,
   loading,
   error,
@@ -10,71 +22,77 @@ const LearningPlans: React.FC<LearningPlansProps> = ({
   onPageChange,
   onEdit,
   onDelete,
-  onAdd,
+  onAdd
 }) => {
-  if (loading) {
-    return <div className="text-center text-blue-500">Loading learning plans...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center text-red-500">Error: {error}</div>;
-  }
-  if (!plans || plans?.length === 0) {
-    return <div className="text-center text-gray-500">No learning plans available.</div>;
-  }
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+  if (error) return <div className="text-center text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="p-4">
-      {/* Add Plan Button */}
-      <div className="flex justify-end mb-4">
+    <div className="container mx-auto p-4">
+      <div className="mb-4 text-center">
         <button
           type="button"
           onClick={onAdd}
-          className="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 transition duration-200"
+          className="py-2 px-4 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
         >
-          Add Learning Plan
+          Add New Plan
         </button>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {plans?.map((plan) => (
-          <div
-            key={plan.id}
-            className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200"
-          >
-            <div className="p-4">
-              <h2 className="text-lg font-semibold mb-2">{plan.title}</h2>
+      <ul className="space-y-4">
+        {plans && plans.length > 0 ? (
+          plans.map(plan => (
+            <li key={plan.id} className="border rounded-lg shadow-sm p-4 bg-white">
+              <h2 className="text-2xl font-bold mb-2">{plan.title}</h2>
               <p className="text-gray-700 mb-2">{plan.description}</p>
-              <p className="text-sm text-gray-500 mb-2">Start Date: {plan.start_date}</p>
-              <p className="text-sm text-gray-500 mb-2">End Date: {plan.end_date}</p>
-              <div className="flex justify-between">
+              <p className="text-gray-600"><strong>Start Date:</strong> {plan.start_date}</p>
+              <p className="text-gray-600 mb-2"><strong>End Date:</strong> {plan.end_date}</p>
+              {plan.course_links && plan.course_links.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-xl font-semibold mb-2">Course Links:</h3>
+                  <ul className="space-y-2">
+                    {plan.course_links.map((link) => (
+                      <li key={link.url}>
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          {link.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="mt-4 flex space-x-2">
                 <button
                   type="button"
                   onClick={() => onEdit(plan.id)}
-                  className="text-blue-500 hover:text-blue-700 font-semibold"
+                  className="py-1 px-3 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
                 >
                   Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => onDelete(plan.id)}
-                  className="text-red-500 hover:text-red-700 font-semibold"
+                  className="py-1 px-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-300"
                 >
                   Delete
                 </button>
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-6">
+            </li>
+          ))
+        ) : (
+          <p className="text-center">No learning plans available.</p>
+        )}
+      </ul>
+      <div className="mt-4 flex justify-center space-x-2">
         <button
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md disabled:opacity-50 transition-opacity duration-300"
+          className="py-2 px-4 bg-gray-300 text-gray-600 rounded-lg cursor-not-allowed disabled:opacity-50"
         >
           Previous
         </button>
@@ -85,7 +103,7 @@ const LearningPlans: React.FC<LearningPlansProps> = ({
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md disabled:opacity-50 transition-opacity duration-300"
+          className="py-2 px-4 bg-gray-300 text-gray-600 rounded-lg cursor-not-allowed disabled:opacity-50"
         >
           Next
         </button>

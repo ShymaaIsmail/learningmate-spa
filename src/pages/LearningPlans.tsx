@@ -1,3 +1,4 @@
+// src/pages/LearningPlansPage.tsx
 import React, { useEffect, useState } from 'react';
 import LearningPlans from '../components/LearningPlanList';
 import { LearningPlan } from '../types/learningTypes';
@@ -31,7 +32,18 @@ const LearningPlansPage: React.FC = () => {
     try {
       setIsProcessing(true);
       setApiError(null);
-      const updatedPlan = { title: 'Updated Plan', description: 'Updated description', start_date: '2024-01-01', end_date: '2024-12-31' };
+      const updatedPlan = { title: 'Updated Plan', description: 'Updated description', start_date: '2024-01-01', end_date: '2024-12-31',
+      "course_links": [
+      {
+        "title": "Course Link 1",
+        "url": "https://www.udemy.com/course/web-design-secrets/"
+      },
+      {
+        "title": "Course Link 2",
+        "url": "https://www.udemy.com/course/official-udemy-create-course/"
+      }
+  ]
+       };
       await editPlan(planId, updatedPlan);
       fetchData();
     } catch (error: any) {
@@ -58,7 +70,17 @@ const LearningPlansPage: React.FC = () => {
     try {
       setIsProcessing(true);
       setApiError(null);
-      const newPlan = { title: 'New Plan', description: 'New plan description', start_date: '2024-01-01', end_date: '2024-2-2'};
+      const newPlan = { title: 'New Plan', description: 'New plan description', start_date: '2024-01-01', end_date: '2024-2-2',
+        "course_links": [
+      {
+        "title": "New 1",
+        "url": "https://www.udemy.com/course/web-design-secrdssadets/"
+      },
+      {
+        "title": "New 2",
+        "url": "https://www.udemy.com/coursecdsds/official-udemy-create-course/"
+      }]
+      };
       await addPlan(newPlan);
       fetchData();
     } catch (error: any) {

@@ -8,7 +8,18 @@ const Header: React.FC = () => {
   return (
     <header className="bg-blue-600 text-white py-4 shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Learning Mate</h1>
+      <div className="flex items-center space-x-4">
+  {/* Logo */}
+  <img src="../learningmate_logo.png" alt="Learningmate Logo" className="w-16 h-16 md:w-20 md:h-20 rounded-full" />
+
+  {/* Title and Slogan */}
+  <div>
+    <h1 className="text-2xl md:text-3xl font-bold">
+      <Link to="/">Learningmate</Link>
+    </h1>
+    <p className="text-sm md:text-base text-gray-600">Plan Today, Learn Tomorrow</p> {/* Slogan */}
+  </div>
+</div>
 
         <div className="flex items-center space-x-6">
           {isLoggedIn && (
