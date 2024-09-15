@@ -29,7 +29,7 @@ const LearningPlans: React.FC<Props> = ({
 
   return (
     <div className="container mx-auto p-4">
-      <div className="mb-4 text-center">
+      <div className="mb-4 text-left">
         <button
           type="button"
           onClick={onAdd}
@@ -41,14 +41,15 @@ const LearningPlans: React.FC<Props> = ({
       <ul className="space-y-4">
         {plans && plans.length > 0 ? (
           plans.map(plan => (
-            <li key={plan.id} className="border rounded-lg shadow-sm p-4 bg-white">
-              <h2 className="text-2xl font-bold mb-2">{plan.title}</h2>
-              <p className="text-gray-700 mb-2">{plan.description}</p>
-              <p className="text-gray-600"><strong>Start Date:</strong> {plan.start_date}</p>
-              <p className="text-gray-600 mb-2"><strong>End Date:</strong> {plan.end_date}</p>
+            <li key={plan.id} className="border rounded-lg shadow-lg p-6 bg-white flex flex-col justify-between">
+            <div>
+              <h2 className="text-2xl font-bold mb-3 text-gray-800">{plan.title}</h2>
+              <p className="text-gray-700 mb-3">{plan.description}</p>
+              <p className="text-gray-600 mb-2"><strong>Start Date:</strong> {plan.start_date}</p>
+              <p className="text-gray-600 mb-4"><strong>End Date:</strong> {plan.end_date}</p>
               {plan.course_links && plan.course_links.length > 0 && (
                 <div className="mt-4">
-                  <h3 className="text-xl font-semibold mb-2">Course Links:</h3>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-800">Course Links:</h3>
                   <ul className="space-y-2">
                     {plan.course_links.map((link) => (
                       <li key={link.url}>
@@ -65,23 +66,25 @@ const LearningPlans: React.FC<Props> = ({
                   </ul>
                 </div>
               )}
-              <div className="mt-4 flex space-x-2">
-                <button
-                  type="button"
-                  onClick={() => onEdit(plan.id)}
-                  className="py-1 px-3 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onDelete(plan.id)}
-                  className="py-1 px-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-300"
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
+            </div>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                type="button"
+                onClick={() => onEdit(plan.id)}
+                className="py-2 px-4 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-300"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => onDelete(plan.id)}
+                className="py-2 px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+          
           ))
         ) : (
           <p className="text-center">No learning plans available.</p>

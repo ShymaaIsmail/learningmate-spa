@@ -25,7 +25,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Check token validity on mount
     if (loginToken) {
       try {
-        const profile: UserProfile = jwtDecode(loginToken);
+        const profile: UserProfile = jwtDecode(googleToken);
+
         setIsLoggedIn(true);
         setUserProfile(profile);
       } catch (err) {
