@@ -1,14 +1,17 @@
-// src/pages/LearningPlansPage.tsx
 import React, { useEffect, useState } from 'react';
 import LearningPlans from '../components/LearningPlanList';
 import { LearningPlan } from '../types/learningTypes';
 import { getPlans, addPlan, editPlan, deletePlan } from '../api/services/plansService';
+import AddEditLearningPlan from '../components/AddEditLearningPlan';
 
 const LearningPlansPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<'add' | 'edit'>('add');
+  const [selectedPlanId, setSelectedPlanId] = useState<number>(0);
 
   const { plans, loading, error: errorResult, fetchData } = getPlans(currentPage);
 
@@ -28,29 +31,10 @@ const LearningPlansPage: React.FC = () => {
     }
   };
 
-  const handleEdit = async (planId: number) => {
-    try {
-      setIsProcessing(true);
-      setApiError(null);
-      const updatedPlan = { title: 'Updated Plan', description: 'Updated description', start_date: '2024-01-01', end_date: '2024-12-31',
-      "course_links": [
-      {
-        "title": "Course Link 1",
-        "url": "https://www.udemy.com/course/web-design-secrets/"
-      },
-      {
-        "title": "Course Link 2",
-        "url": "https://www.udemy.com/course/official-udemy-create-course/"
-      }
-  ]
-       };
-      await editPlan(planId, updatedPlan);
-      fetchData();
-    } catch (error: any) {
-      setApiError(error.message || 'Failed to edit learning plan.');
-    } finally {
-      setIsProcessing(false);
-    }
+  const handleEdit = (planId: number) => {
+    setEditMode('edit');
+    setSelectedPlanId(planId);
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (planId: number) => {
@@ -66,25 +50,25 @@ const LearningPlansPage: React.FC = () => {
     }
   };
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
+    setEditMode('add');
+    setSelectedPlanId(0);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async (plan: LearningPlan) => {
     try {
       setIsProcessing(true);
       setApiError(null);
-      const newPlan = { title: 'New Plan', description: 'New plan description', start_date: '2024-01-01', end_date: '2024-2-2',
-        "course_links": [
-      {
-        "title": "New 1",
-        "url": "https://www.udemy.com/course/web-design-secrdssadets/"
-      },
-      {
-        "title": "New 2",
-        "url": "https://www.udemy.com/coursecdsds/official-udemy-create-course/"
-      }]
-      };
-      await addPlan(newPlan);
+      if (editMode === 'edit' && selectedPlanId) {
+        await editPlan(selectedPlanId, plan);
+      } else {
+        await addPlan(plan);
+      }
       fetchData();
+      setIsModalOpen(false);
     } catch (error: any) {
-      setApiError(error.message || 'Failed to add learning plan.');
+      setApiError(error.message || `Failed to ${editMode === 'edit' ? 'edit' : 'add'} learning plan.`);
     } finally {
       setIsProcessing(false);
     }
@@ -105,6 +89,14 @@ const LearningPlansPage: React.FC = () => {
         onDelete={handleDelete}
         onAdd={handleAdd}
       />
+      {isModalOpen && (
+        <AddEditLearningPlan
+          planId={selectedPlanId}
+          mode={editMode}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 };

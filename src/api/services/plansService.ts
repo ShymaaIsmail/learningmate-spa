@@ -51,9 +51,23 @@ const deletePlan = async (id: number) => {
   }
 };
 
+const getPlanById = (planId: number) => {
+  const { data, isLoading, error, fetchData } = useFetch<LearningPlan>({
+    url: `${API_BASE_URL}/${planId}`,
+    method: 'GET',
+  });
+
+  return {
+    plan: data || null,
+    loading: isLoading,
+    error: error || null,
+    fetchData,
+  };
+};
 export {
   getPlans,
   addPlan,
   editPlan,
-  deletePlan
+  deletePlan,
+  getPlanById
 };
