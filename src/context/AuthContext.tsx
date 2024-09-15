@@ -25,14 +25,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       try {
         const response = await axios.post(`${process.env.REACT_APP_LEARNING_API_URL}auth/login/`, { google_token: googleToken });
-        setLoginToken(response.data.token); // Adjust according to your API response structure
+        setLoginToken(response.data.token);
       } catch (err) {
         setError((err as Error).message);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchLoginToken();
   }, [googleToken]);
 

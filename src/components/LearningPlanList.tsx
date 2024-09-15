@@ -2,7 +2,7 @@ import React from 'react';
 import { LearningPlansProps } from '../types/learningTypes';
 
 const LearningPlans: React.FC<LearningPlansProps> = ({
-  paginatedPlans,
+  plans,
   loading,
   error,
   currentPage,
@@ -19,8 +19,7 @@ const LearningPlans: React.FC<LearningPlansProps> = ({
   if (error) {
     return <div className="text-center text-red-500">Error: {error}</div>;
   }
-
-  if (!paginatedPlans || paginatedPlans?.plans?.length === 0) {
+  if (!plans || plans?.length === 0) {
     return <div className="text-center text-gray-500">No learning plans available.</div>;
   }
 
@@ -38,7 +37,7 @@ const LearningPlans: React.FC<LearningPlansProps> = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {paginatedPlans.plans?.map((plan) => (
+        {plans?.map((plan) => (
           <div
             key={plan.id}
             className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200"
@@ -48,7 +47,6 @@ const LearningPlans: React.FC<LearningPlansProps> = ({
               <p className="text-gray-700 mb-2">{plan.description}</p>
               <p className="text-sm text-gray-500 mb-2">Start Date: {plan.start_date}</p>
               <p className="text-sm text-gray-500 mb-2">End Date: {plan.end_date}</p>
-              <p className="text-sm text-gray-500 mb-4">User ID: {plan.user}</p>
               <div className="flex justify-between">
                 <button
                   type="button"

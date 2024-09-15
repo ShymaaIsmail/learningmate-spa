@@ -24,13 +24,10 @@ export interface Course  {
     updated_at: string;        // Timestamp when the learning plan was last updated (ISO date string)
     user: number;
   };
-  export interface PaginatedLearningPlan  {
-    plans: LearningPlan[];
-    totalPages: number;
-  }
+
 
  export interface LearningPlansProps {
-    paginatedPlans: PaginatedLearningPlan | null;
+    plans: LearningPlan[] | null;
     loading: boolean;
     error: string | null;
     onEdit: (planId: number) => void; // Function to handle editing a plan
