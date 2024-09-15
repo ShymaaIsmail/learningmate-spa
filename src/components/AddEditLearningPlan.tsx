@@ -15,8 +15,8 @@ const AddEditLearningPlan: React.FC<AddEditLearningPlanProps> = ({
   onClose,
   onSave
 }) => {
-    
   const [plan, setPlan] = useState<LearningPlan | undefined>(undefined);
+  const [newLink, setNewLink] = useState<{ url: string; title: string }>({ url: '', title: '' });
 
   useEffect(() => {
     if (mode === 'edit' && planId !== null) {
@@ -34,7 +34,7 @@ const AddEditLearningPlan: React.FC<AddEditLearningPlanProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-  
+
     setPlan((prevPlan) => {
       if (!prevPlan) {
         return { [name]: value } as unknown as LearningPlan;
@@ -44,6 +44,33 @@ const AddEditLearningPlan: React.FC<AddEditLearningPlanProps> = ({
         [name]: value,
       };
     });
+  };
+
+  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewLink((prevLink) => ({
+      ...prevLink,
+      [name]: value
+    }));
+  };
+
+  const handleAddLink = () => {
+    if (plan) {
+      setPlan({
+        ...plan,
+        course_links: [...(plan.course_links || []), newLink]
+      });
+      setNewLink({ url: '', title: '' });
+    }
+  };
+
+  const handleRemoveLink = (url: string) => {
+    if (plan) {
+      setPlan({
+        ...plan,
+        course_links: plan.course_links?.filter(link => link.url !== url) || []
+      });
+    }
   };
 
   const handleSave = () => {
@@ -101,6 +128,57 @@ const AddEditLearningPlan: React.FC<AddEditLearningPlanProps> = ({
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
             />
+          </div>
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold mb-2">Course Links</h3>
+            {plan?.course_links && plan.course_links.length > 0 && (
+              <ul className="mb-4">
+                {plan.course_links.map(link => (
+                  <li key={link.url} className="flex justify-between items-center mb-2">
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {link.title}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveLink(link.url)}
+                      className="text-red-500 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="title"
+                value={newLink.title}
+                onChange={handleLinkChange}
+                placeholder="Link Title"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="url"
+                name="url"
+                value={newLink.url}
+                onChange={handleLinkChange}
+                placeholder="Link URL"
+                className="w-full border border-gray-300 rounded-md p-2"
+              />
+              <button
+                type="button"
+                onClick={handleAddLink}
+                className="bg-green-500 text-white px-4 py-2 rounded-md"
+              >
+                Add Link
+              </button>
+            </div>
           </div>
           <div className="flex justify-end">
             <button
